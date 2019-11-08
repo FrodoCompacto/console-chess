@@ -1,15 +1,20 @@
 ﻿using System;
 using ConsoleChess.tabuleiro;
+using ConsoleChess.xadrez;
 
 namespace ConsoleChess {
     internal class Program {
         public static void Main(string[] args) {
             
-            Tabuleiro tab = new Tabuleiro(8,8);
             
-            Tela.imprimirTabuleiro(tab);
+            PartidaDeXadrez partida = new PartidaDeXadrez();
+            
 
+            Tela.ImprimirTabuleiro(partida.Tab);
+            
             Console.ReadLine();
         }
+
+        
     }
 }

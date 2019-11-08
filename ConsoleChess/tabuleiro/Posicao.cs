@@ -10,7 +10,7 @@
         }
 
         public override string ToString() {
-            return $"{nameof(Linha)}: {Linha}, {nameof(Coluna)}: {Coluna}";
+            return this.Linha + ", " + this.Coluna;
         }
     }
 }
