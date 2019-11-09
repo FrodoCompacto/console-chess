@@ -10,5 +10,10 @@ namespace ConsoleChess.xadrez {
         public override string ToString() {
             return "T";
         }
+        
+        public override bool[,] MovimentosPossiveis() {
+            //TODO
+            throw new System.NotImplementedException();
+        }
     }
 }
