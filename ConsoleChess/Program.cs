@@ -5,27 +5,43 @@ using ConsoleChess.xadrez;
 namespace ConsoleChess {
     internal class Program {
         public static void Main(string[] args) {
-            
-            
             PartidaDeXadrez partida = new PartidaDeXadrez();
 
-            while (!partida.Terminada) {
+            try {
+                while (!partida.Terminada) {
+                    try {
+                        Console.Clear();
+                        Tela.ImprimirPartida(partida);
 
+                        Console.Write("Origem: ");
+                        Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
+                        partida.ValidaPosicaoOrigem(origem);
+
+                        bool[,] posicoesPossiveis = partida.Tab.Peca(origem).MovimentosPossiveis();
+
+                        Console.Clear();
+                        Tela.ImprimirTabuleiro(partida.Tab, posicoesPossiveis);
+
+                        Console.WriteLine();
+                        Console.Write("Destino: ");
+                        Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
+                        partida.ValidarPosicaoDestino(origem,destino);
+
+                        partida.RealizaJogada(origem, destino);
+                    }
+                    catch (Exception e) {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
+                }
                 Console.Clear();
-                Tela.ImprimirTabuleiro(partida.Tab);
-                
-                Console.Write("Origem: ");
-                Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
-                Console.Write("Destino: ");
-                Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
-                
-                partida.ExecutaMovimento(origem,destino);
-
+                Tela.ImprimirPartida(partida);
+            }
+            catch (TabuleiroException e) {
+                Console.WriteLine(e.Message);
             }
 
             Console.ReadLine();
         }
-
-        
     }
 }
