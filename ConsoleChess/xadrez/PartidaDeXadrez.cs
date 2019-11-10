@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ConsoleChess.tabuleiro;
 
@@ -38,36 +38,37 @@ namespace ConsoleChess.xadrez {
 
             // #jogada especial roque
             if (p is Rei && destino.Coluna == origem.Coluna + 2) {
-                Posicao origemT = new Posicao(origem.Linha, origem.Coluna+3);
-                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna+1);
+                Posicao origemT = new Posicao(origem.Linha, origem.Coluna + 3);
+                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna + 1);
                 Peca T = Tab.RetirarPeca(origemT);
                 T.IncrementarQtdMovimentos();
-                Tab.ColocarPeca(T,destinoT);
+                Tab.ColocarPeca(T, destinoT);
             }
-            
+
             if (p is Rei && destino.Coluna == origem.Coluna - 2) {
-                Posicao origemT = new Posicao(origem.Linha, origem.Coluna-4);
-                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna-1);
+                Posicao origemT = new Posicao(origem.Linha, origem.Coluna - 4);
+                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna - 1);
                 Peca T = Tab.RetirarPeca(origemT);
                 T.IncrementarQtdMovimentos();
-                Tab.ColocarPeca(T,destinoT);
+                Tab.ColocarPeca(T, destinoT);
             }
-            
+
             // enpassant
             if (p is Peao) {
                 if (origem.Coluna != destino.Coluna && pecaCapturada == null) {
                     Posicao posP;
                     if (p.Cor == Cor.Branca) {
-                        posP = new Posicao(destino.Linha+1,destino.Coluna);
+                        posP = new Posicao(destino.Linha + 1, destino.Coluna);
                     }
                     else {
-                        posP = new Posicao(destino.Linha-1,destino.Coluna);
+                        posP = new Posicao(destino.Linha - 1, destino.Coluna);
                     }
+
                     pecaCapturada = Tab.RetirarPeca(posP);
-                    Capturadas.Add(p);
+                    Capturadas.Add(pecaCapturada);
                 }
             }
-            
+
             return pecaCapturada;
         }
 
@@ -77,6 +78,20 @@ namespace ConsoleChess.xadrez {
                 DesfazMovimento(origem, destino, pecaCapturada);
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
             }
+
+            Peca p = Tab.Peca(destino);
+
+            // promoção
+            if (p is Peao) {
+                if ((p.Cor == Cor.Branca && destino.Linha == 0) || (p.Cor == Cor.Preta && destino.Linha == 7)) {
+                    p = Tab.RetirarPeca(destino);
+                    Pecas.Remove(p);
+                    Peca dama =  new Dama(Tab, p.Cor);
+                    Tab.ColocarPeca(dama, destino);
+                    Pecas.Add(dama);
+                }
+            }
+
 
             if (EstaEmXeque(Adversaria(JogadorAtual))) {
                 Xeque = true;
@@ -90,13 +105,12 @@ namespace ConsoleChess.xadrez {
             }
             else {
                 this.Turno++;
-                MudaJogador();   
+                MudaJogador();
             }
 
-            Peca p = Tab.Peca(destino);
-            
+
             // #jogada especial en passant
-            if (p is Peao && (destino.Linha == origem.Linha-2 || destino.Linha == origem.Linha+2)) {
+            if (p is Peao && (destino.Linha == origem.Linha - 2 || destino.Linha == origem.Linha + 2)) {
                 VulveravelEnPassant = p;
             }
             else {
@@ -113,23 +127,24 @@ namespace ConsoleChess.xadrez {
             }
 
             Tab.ColocarPeca(p, origem);
-            
+
             // #jogada especial roque
             if (p is Rei && destino.Coluna == origem.Coluna + 2) {
-                Posicao origemT = new Posicao(origem.Linha, origem.Coluna+3);
-                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna+1);
+                Posicao origemT = new Posicao(origem.Linha, origem.Coluna + 3);
+                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna + 1);
                 Peca T = Tab.RetirarPeca(destinoT);
                 T.DecrementarQtdMovimentos();
-                Tab.ColocarPeca(T,origemT);
+                Tab.ColocarPeca(T, origemT);
             }
+
             if (p is Rei && destino.Coluna == origem.Coluna - 2) {
-                Posicao origemT = new Posicao(origem.Linha, origem.Coluna-4);
-                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna-1);
+                Posicao origemT = new Posicao(origem.Linha, origem.Coluna - 4);
+                Posicao destinoT = new Posicao(origem.Linha, origem.Coluna - 1);
                 Peca T = Tab.RetirarPeca(destinoT);
                 T.IncrementarQtdMovimentos();
-                Tab.ColocarPeca(T,origemT);
+                Tab.ColocarPeca(T, origemT);
             }
-            
+
             // enpassant
             if (p is Peao) {
                 if (origem.Coluna != destino.Coluna && pecaCapturada == VulveravelEnPassant) {
@@ -139,9 +154,10 @@ namespace ConsoleChess.xadrez {
                         posP = new Posicao(3, destino.Coluna);
                     }
                     else {
-                        posP = new Posicao(4,destino.Coluna);
+                        posP = new Posicao(4, destino.Coluna);
                     }
-                    Tab.ColocarPeca(peao,posP);
+
+                    Tab.ColocarPeca(peao, posP);
                 }
             }
         }
